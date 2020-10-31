@@ -61,7 +61,7 @@ public class LiveService {
     private String buildQ(String startDate, String language) {
         StringBuilder stringBuilder = new StringBuilder();
         if (!StringUtils.isEmpty(language)) {
-            stringBuilder.append("language:").append(language).append("+");
+            stringBuilder.append("language:").append(language).append(" ");
         }
         stringBuilder.append("created:>").append(startDate);
         return stringBuilder.toString();
