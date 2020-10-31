@@ -1,0 +1,13 @@
+hazelcast:
+  network:
+    join:
+      multicast:
+        enabled: true
+    map:
+      name: LiveResponses
+      in-memory-format: BINARY
+      metadata-policy: CREATE_ON_UPDATE
+      event-journal:
+        enabled: false
+        capacity: 10000
+        time-to-live-seconds: 3600

@@ -5,7 +5,6 @@ import eu.mitrial.backendchallenge.beans.LiveResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -15,6 +14,7 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvi
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -37,7 +37,7 @@ public class LiveService {
         client = ClientBuilder.newClient(new ClientConfig(jacksonJsonProvider));
     }
 
-
+    @Cacheable("LiveResponses")
     public LiveResponse search(String startDate, String language, int limit) {
         try {
             String q = buildQ(startDate, language);
