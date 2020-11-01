@@ -2,29 +2,19 @@ package eu.mitrial.backendchallenge;
 
 import eu.mitrial.backendchallenge.beans.LiveResponse;
 import eu.mitrial.backendchallenge.service.LiveService;
-import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import javax.ws.rs.core.HttpHeaders;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
@@ -39,11 +29,11 @@ public class LiveSearchIT {
     private LiveService service;
 
     @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this, 1080);
+    public final MockServerRule mockServerRule = new MockServerRule(this, 1080);
 
 
     @Test
-    public void contextLoads() throws Exception {
+    public void contextLoads() {
         Assert.assertNotNull(service);
     }
 
