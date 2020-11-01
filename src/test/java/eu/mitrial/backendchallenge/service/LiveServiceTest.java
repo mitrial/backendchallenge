@@ -24,6 +24,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LiveServiceTest {
 
+    public static final List<String> EXPECTED_HEADER = Arrays.asList(
+            LiveService.Q,
+            LiveService.SORT,
+            LiveService.ORDER,
+            LiveService.PER_PAGE);
+
     public static final String TESTURL = "TESTURL";
     @Mock
     private ClientProvider clientProvider;
@@ -46,12 +52,8 @@ class LiveServiceTest {
     private ArgumentCaptor<String> headerKeyCapture;
     @Captor
     private ArgumentCaptor<Object> headerBodyCapture;
+
     private LiveService liveService;
-    public static final List<String> EXPECTED_HEADER = Arrays.asList(
-            LiveService.Q,
-            LiveService.SORT,
-            LiveService.ORDER,
-            LiveService.PER_PAGE);
 
     @BeforeEach
     public void initMock() {
@@ -71,11 +73,34 @@ class LiveServiceTest {
     }
 
     @Test
-    public void startDateIsNull() {
+    void startDateIsNull() {
         LiveResponse response = liveService.search(null, null, 0);
         Assertions.assertNotNull(response);
         assertCaptures("created:>null");
 
+    }
+
+    @Test
+    void checkStartDate() {
+        LiveResponse response = liveService.search("START_DATE", null, 0);
+        Assertions.assertNotNull(response);
+        assertCaptures("created:>START_DATE");
+    }
+
+    @Test
+    void checkStartDateAndLanguage() {
+        LiveResponse response = liveService.search("START_DATE", "LANG", 0);
+        Assertions.assertNotNull(response);
+        assertCaptures("language:LANG created:>START_DATE");
+    }
+
+    @Test
+    void checkPaging() {
+        LiveResponse response = liveService.search(null, null, 333);
+        Assertions.assertNotNull(response);
+        int indexOfPerPage = queryParamKeyCapture.getAllValues().indexOf("per_page");
+        Integer integer = (Integer) queryParamBodyCapture.getAllValues().get(indexOfPerPage);
+        Assertions.assertEquals(333, integer);
     }
 
     private void assertCaptures(String expectedQ) {
@@ -94,28 +119,5 @@ class LiveServiceTest {
         Assertions.assertEquals(MediaType.APPLICATION_FORM_URLENCODED, headerBodyCapture.getValue());
 
 
-    }
-
-    @Test
-    public void checkStartDate() {
-        LiveResponse response = liveService.search("START_DATE", null, 0);
-        Assertions.assertNotNull(response);
-        assertCaptures("created:>START_DATE");
-    }
-
-    @Test
-    public void checkStartDateAndLanguage() {
-        LiveResponse response = liveService.search("START_DATE", "LANG", 0);
-        Assertions.assertNotNull(response);
-        assertCaptures("language:LANG created:>START_DATE");
-    }
-
-    @Test
-    void checkPaging() {
-        LiveResponse response = liveService.search(null, null, 333);
-        Assertions.assertNotNull(response);
-        int indexOfPerPage = queryParamKeyCapture.getAllValues().indexOf("per_page");
-        Integer integer = (Integer) queryParamBodyCapture.getAllValues().get(indexOfPerPage);
-        Assertions.assertEquals(333, integer);
     }
 }
